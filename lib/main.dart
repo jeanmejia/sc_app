@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:test_project/page/grades_page.dart';
+import 'package:test_project/page/graphs_page.dart';
+import 'package:test_project/page/home_page.dart';
+import 'package:test_project/page/settings_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -13,56 +19,55 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'School App'),
-      debugShowCheckedModeBanner: false,
+      home: const MainPage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key, required this.title}) : super(key: key);
+
   final String title;
+  
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+class _MainPageState extends State<MainPage> {
+  int currentIndex = 0;
+  final screens = [
+    HomePage(),
+    GradesPage(),
+    GraphsPage(),
+    SettingsPage(),
+  ];
 
   @override
-  Widget build(BuildContext context) {
-  
-    return Scaffold(
-      appBar: AppBar(
-
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Has presionado mucho estos botones',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+  Widget build(BuildContext context) => Scaffold(
+        
+        body: IndexedStack(index: currentIndex,children: screens,),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: currentIndex,
+          onTap: (index) => setState(() => currentIndex = index),
+          items: const [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Inbox',
+                backgroundColor: Colors.blue),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.bookmark),
+                label: 'Notas',
+                backgroundColor: Colors.blue),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.assessment),
+                label: 'Gráficos',
+                backgroundColor: Colors.blue),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: 'Configuración',
+                backgroundColor: Colors.blue)
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Agregar numeritos',
-        child: Icon(Icons.add),
-      ),
-    );
-  }
+      );
 }
